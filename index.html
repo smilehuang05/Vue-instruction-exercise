@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue指令练习</title>
+    <!-- 第一步:引入vue.js文件 -->
+    <script src="vue.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- 第二步:创建控制区域 -->
+    <div id="app">
+        <input type="text" class="iptSearch" v-focus v-color v-model="keywords" @keyup.enter="add" placeholder="请输入内容">
+        <p v-if="flag">暂无内容</p>
+        <table cellspacing="0" cellspadding="0">
+            <tr v-for="(item,i) in list">
+                <td><input type="checkbox"></td>
+                <td class="w1">{{item.word}}</td>
+                <td><button @click="del">删除</button></td>
+            </tr>
+        </table>
+    </div>
+    <!-- 第三步:创建实例 -->
+    <script>
+        //文本框获取焦点
+        Vue.directive('focus', {
+                inserted: function(el) {
+                    el.focus();
+                }
+            })
+            //文本内容颜色的更换
+        Vue.directive('color', {
+            bind: function(el) {
+                el.style.color = "pink";
+            }
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                keywords: '',
+                flag: true
+            },
+            methods: {
+                add() {
+                    //文本框中输入内容,按enter键添加到表单中
+                    var newWords = {
+                        word: this.keywords
+                    }
+                    this.list.push(newWords);
+                    this.keywords = '';
+                    //表单中有内容,p标签提示文字消失
+                    this.flag = false;
+                },
+                del() { //找到索引值,删除选中的这一行
+                    this.list.splice(0, 1);
+                    //当表单中没有内容了,p标签提示文字显示
+                    if (this.list.length == 0) {
+                        this.flag = true;
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
